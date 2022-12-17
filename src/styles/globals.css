@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  transition: all;
+  transition-duration: 300;
+}
+
+body {
+  @apply bg-white dark:bg-neutral-900 transition-all text-neutral-600 dark:text-neutral-400;
+}
+
+.root {
+  @apply max-w-screen-2xl min-h-screen mx-auto relative font-titillium px-2 2xl:px-0;
+}
+
+input {
+  @apply outline-none focus:border-sky-700 transition-all !important;
+}
+
+.tm-base {
+  @apply  
+  bg-white 
+  dark:bg-neutral-900
+  border-neutral-200 
+  dark:border-neutral-700
+}
+
+/* a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+} */
+
+@import 'components.css';
+@import 'animate.css';
+@import 'scroll.css';

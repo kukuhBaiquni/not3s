@@ -1,0 +1,98 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "next",
+    "next/core-web-vitals"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "semi": ["error", "never"],
+    "react/jsx-fragments": ["warn", "element"],
+    "camelcase": "off",
+    "indent": [
+      "warn",
+      2,
+      {
+        "ignoredNodes": ["TemplateLiteral"]
+      }
+    ],
+    "template-curly-spacing": "off",
+    "quotes": [
+      "warn",
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
+    "jsx-quotes": ["warn", "prefer-single"],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-max-props-per-line": "warn",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-filename-extension": "off",
+    "react/state-in-constructor": "off",
+    "react/jsx-sort-props": [
+      "error",
+      {
+        "callbacksLast": true
+      }
+    ],
+    "import/no-unresolved": "off",
+    "react/forbid-prop-types": "off",
+    "react/require-default-props": "off",
+    "react/prop-types": "warn",
+    "no-unused-vars": "warn",
+    "no-underscore-dangle": "off",
+    "no-nested-ternary": "off",
+    "no-use-before-define": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "react/no-array-index-key": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "no-param-reassign": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 100,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreStrings": true
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "required": {
+          "some": ["nesting", "id"]
+        }
+      }
+    ],
+    "jsx-a11y/label-has-for": [
+      "error",
+      {
+        "required": {
+          "some": ["nesting", "id"]
+        }
+      }
+    ]
+  }
+}

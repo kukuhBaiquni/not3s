@@ -1,0 +1,15 @@
+.slide-up {
+  transform: translateY(0);
+}
+
+.slide-down {
+  transform: translateY(700px);
+}
+
+.slide-left {
+  transform: translateX(0);
+}
+
+.slide-right {
+  transform: translateX(700px);
+}

@@ -1,0 +1,54 @@
+.header-open {
+  @apply h-24;
+}
+
+.header-close {
+  @apply h-16;
+}
+
+.trans-g {
+  @apply transition-all duration-500;
+}
+
+.shade {
+  box-shadow: 0 4px 20px 0 rgb(0 0 0 / 20%);
+}
+
+.hover-button {
+  @apply hover:bg-secondary transition-all duration-500;
+}
+
+.flex-r {
+  @apply flex items-center justify-center;
+}
+
+.flex-c {
+  @apply flex flex-col;
+}
+
+.chat-head {
+  @apply bg-gray-300 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600;
+}
+
+.chat-body {
+  @apply bg-gray-200 dark:bg-gray-900 transition-all duration-500;
+}
+
+.chat-collapse {
+  @apply h-12 w-12 bg-primary fixed lg:bottom-10 lg:right-12 bottom-6 right-6 
+  rounded-full shadow-xl cursor-pointer hover-button transition-all duration-500
+  flex items-center justify-center;
+}
+
+.chat-fullscreen {
+  @apply h-[calc(100%-75px)] w-full fixed z-50 lg:bottom-0 lg:right-0 bottom-0 right-0 transition-all duration-500;
+}
+
+.body-fullscreen {
+  height: calc(100vh-(72px+75px)) !important;
+}
+
+.chat-expanded {
+  @apply lg:h-[650px] lg:w-[400px] h-[calc(100%-75px)] w-full fixed z-50 transition-all duration-500 lg:right-10 lg:bottom-[50px]
+  right-0 bottom-0;
+}
