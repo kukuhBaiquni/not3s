@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import useDarkMode from 'hooks/use-dark-mode'
+import useDarkMode from 'hooks/useDarkMode'
 
 const menu = [
   { text: 'Home' },

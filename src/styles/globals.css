@@ -12,6 +12,17 @@ body {
   transition-duration: 300;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
 body {
   @apply bg-white dark:bg-neutral-900 transition-all text-neutral-600 dark:text-neutral-400;
 }

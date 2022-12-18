@@ -1,6 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Header from 'components/block/header'
+import dynamic from 'next/dynamic'
+import { ToastContainer } from 'react-toastify'
+
+const Header = dynamic(
+  () => import('components/block/header'),
+  { ssr: false },
+)
 
 export default function DefaultLayout({ children }) {
   return (
@@ -16,6 +22,7 @@ export default function DefaultLayout({ children }) {
       {/* <div className='root'>
       </div> */}
       {children}
+      <ToastContainer />
     </div>
   )
 }
