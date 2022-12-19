@@ -20,7 +20,7 @@ export default function ChatPanel({
   isExpanded,
   toggleChatPanel,
 }) {
-  const [isSignProcess, setIsSignProcess] = useState(false)
+  const [isSignProcess, setIsSignProcess] = useState(true)
 
   return (
     <div className='chat-expanded slide-right' id='chat-panel-open'>

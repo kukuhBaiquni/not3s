@@ -7,7 +7,7 @@ const {
 
 const API = async (props) => {
   const {
-    path, method = 'GET', params = {}, data,
+    path, method = 'GET', params = {}, data, headers,
   } = props
   const timeout = 15E3
   const config = {
@@ -20,7 +20,7 @@ const API = async (props) => {
     },
     data,
     headers: {
-      Accept: 'application/json',
+      ...headers,
     },
   }
   const response = await axios(config)

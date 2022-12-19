@@ -24,6 +24,7 @@ export default function ChatHead({
         <Image
           alt='logo'
           height={70}
+          priority
           src='/images/lenna.svg'
           width={45}
         />

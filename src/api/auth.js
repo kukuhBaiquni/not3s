@@ -11,4 +11,24 @@ export const registration = ({ data }) => API({
   data,
 })
 
-export const a = {}
+export const registrationCheck = ({ data }) => {
+  const userCredential = localStorage.getItem('webchat_user')
+  if (userCredential) {
+    const { cred } = JSON.parse(userCredential)
+    return API({
+      method: 'POST',
+      path: `/${SAMPLE_APP_ID}/register/check`,
+      data: {
+        ...data,
+        integrationId: SAMPLE_INTEGRATION_ID,
+      },
+      headers: {
+        'X-LENNA-WEBCHAT': cred,
+      },
+    })
+  }
+  /**
+   * Handle jika user credential tiba-tiba tidak ditemukan
+   */
+  return null
+}
