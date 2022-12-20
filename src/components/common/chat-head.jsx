@@ -1,25 +1,27 @@
 import Image from 'next/image'
 import PropTypes from 'prop-types'
+import useUiRelated from 'store/ui-related'
 
 /**
  * Parent component:
  *  -components/common/chat-panel.jsx
  *
- * @param toggleExpand func = Untuk memperbesar ukuran chat panel
- * @param toggleChatPanel func = Untuk membuka tampilan chat panel
- * @param isExpanded bool = State yang menentukan apakah chat panel sedang diperbesar atau tidak'
  * @param isSignProcess bool = State yang menentukan apakah sedang proses registrasi atau tidak
  *
  */
 
 export default function ChatHead({
-  toggleChatPanel,
-  toggleExpand,
-  isExpanded,
   isSignProcess,
 }) {
+  const {
+    toggleChatPanel, isChatPanelExpanded, toggleChatPanelExpanded,
+  } = useUiRelated((state) => state)
+
   return (
-    <header className='lg:flex hidden items-center chat-head justify-between py-4 px-6 w-full h-[75px]' id='chat-head'>
+    <header
+      className='lg:flex hidden items-center chat-head justify-between py-4 px-6 w-full h-[75px] bg-indigo-300'
+      id='chat-head'
+    >
       <div className='flex items-center gap-2'>
         <Image
           alt='logo'
@@ -35,10 +37,10 @@ export default function ChatHead({
           <i
             className='bx bx-expand text-xl cursor-pointer hover:opacity-70 transition-all'
             title='Expand Chat'
-            onClick={toggleExpand}
+            onClick={() => toggleChatPanelExpanded(true)}
           />
         )}
-        {!isExpanded && (
+        {!isChatPanelExpanded && (
           <i
             className='bx bx-x text-4xl cursor-pointer hover:opacity-70 transition-all'
             title='close'
@@ -51,8 +53,5 @@ export default function ChatHead({
 }
 
 ChatHead.propTypes = {
-  toggleChatPanel: PropTypes.func,
-  toggleExpand: PropTypes.func,
-  isExpanded: PropTypes.bool,
   isSignProcess: PropTypes.bool,
 }

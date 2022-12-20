@@ -1,54 +1,54 @@
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import useChat from 'store/chat'
-import { useMutation } from 'react-query'
-import { chatEvent } from 'api/chat'
 import { useForm } from 'react-hook-form'
+import { useDebouncedCallback } from 'use-debounce'
+import useUiRelated from 'store/ui-related'
+import botResponse from 'helpers/bot-response'
 
 export default function ChatInput({
   isSignProcess,
 }) {
-  const { register, handleSubmit } = useForm()
-  const chats = useChat((state) => state.chats)
+  const { register, handleSubmit, reset } = useForm()
+  const { appendChat } = useChat((state) => state)
+  const { toggleBotLoading } = useUiRelated((state) => state)
 
-  const postChat = useMutation(chatEvent)
-
-  useEffect(() => {
-    postChat.mutate({
-      events: 'message',
-      message: {
-        messageable_type: 'user',
-        content: [{
-          show: true,
-          speech: 'haii',
-          text: 'haii',
-          type: 'text',
-        }],
-      },
-    })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const sendMessage = (data) => {
-    postChat.mutate({
-      data: {
-        events: 'message',
-        message: {
-          messageable_type: 'user',
-          content: [{
-            show: true,
-            speech: data.text,
-            text: data.text,
-            type: 'text',
-          }],
-        },
-      },
-    })
+  const sendMessage = (data, e) => {
+    const isEnterPressed = e.keyCode === 13
+    if (isEnterPressed) {
+      const chatBody = {
+        id: `${Date.now()}-user`,
+        text: data.text,
+        from: 'user',
+        type: 'text',
+        date: new Date(),
+      }
+      appendChat(chatBody)
+      reset({
+        text: '',
+      })
+      debounceBotResponse()
+    }
   }
 
-  console.log('CHATs', chats)
+  const response = () => {
+    const random = Math.floor(Math.random() * botResponse.length) - 1
+    toggleBotLoading(true)
+    setTimeout(() => {
+      const chatBody = {
+        id: `${Date.now()}-bot`,
+        text: botResponse[random],
+        from: 'bot',
+        type: 'text',
+        date: new Date(),
+      }
+      toggleBotLoading(false)
+      appendChat(chatBody)
+    }, 1500)
+  }
+  const debounceBotResponse = useDebouncedCallback(response, 1000)
 
   return (
     <div className='chat-head border-none sticky bottom-0 left-0 w-full'>
@@ -58,7 +58,8 @@ export default function ChatInput({
             <i className='bx bx-happy text-2xl' />
             <div className='bg-sky-50 dark:bg-gray-700 w-full rounded px-2 py-0.5 flex items-center justify-between'>
               <input
-                className='w-[80%] bg-transparent'
+                autoComplete='off'
+                className='w-[90%] lg:w-[80%] bg-transparent text-sm'
                 placeholder='Ketik disini..'
                 type='text'
                 {...register('text', { required: true })}

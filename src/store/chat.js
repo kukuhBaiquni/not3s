@@ -1,14 +1,14 @@
 import create from 'zustand'
 
-const chat = create(
+const useChat = create(
   (set) => ({
     chats: [],
-    setChat: (data) => set(
+    appendChat: (data) => set(
       (state) => ({
-        chats: state,
+        chats: [data, ...state.chats],
       }),
     ),
   }),
 )
 
-export default chat
+export default useChat

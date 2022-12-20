@@ -10,7 +10,6 @@ const {
 const hashids = new Hashids('', 6)
 
 export const chatEvent = (data) => {
-  console.log('dataa', data)
   const userCredential = localStorage.getItem('webchat_user')
   if (userCredential) {
     const { cred, id } = JSON.parse(userCredential)

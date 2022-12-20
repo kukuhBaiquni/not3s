@@ -4,7 +4,7 @@ import env from '../env'
 const {
   API_URL, API_URL_ORI, SAMPLE_INTEGRATION_ID, SAMPLE_APP_ID,
 } = env
-
+console.log(API_URL)
 const API = async (props) => {
   const {
     path, method = 'GET', params = {}, data, headers,
@@ -12,7 +12,7 @@ const API = async (props) => {
   const timeout = 15E3
   const config = {
     timeout,
-    baseURL: API_URL_ORI,
+    baseURL: API_URL,
     url: path,
     method,
     params: {

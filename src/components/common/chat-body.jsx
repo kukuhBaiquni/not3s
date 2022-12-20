@@ -1,14 +1,19 @@
-import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useEffect, useState, useRef } from 'react'
-import useScrollToTop from 'hooks/useScrollToTop'
+import useChat from 'store/chat'
+import useUiRelated from 'store/ui-related'
+import { PulseLoader } from 'react-spinners'
+
 import ChatBubbleBot from './chat-bubble-bot'
 import ChatBubbleMe from './chat-bubble-me'
 
-export default function ChatBody({
-  toggleChatPanel,
-}) {
-  // const { visible, scrollToTop } = useScrollToTop()
+import CarouselProduct from './chat/carousel-product'
+import HorizontalViewProduct from './chat/horizontal-view-product'
+// 3d6cff60-80ad-11ed-9bf6-95173075802e
+export default function ChatBody() {
+  const { chats, appendChat } = useChat((state) => state)
+  const { isBotLoading, toggleBotLoading, isChatPanelExpanded } = useUiRelated((state) => state)
+
   const [data, setData] = useState(Array.from({ length: 20 }))
 
   const bodyScroll = useRef(null)
@@ -17,8 +22,14 @@ export default function ChatBody({
     /**
      * Initial render
      */
-    console.log('test')
   }, [])
+
+  useEffect(() => {
+    bodyScroll.current.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }, [chats.length])
 
   const fetchMoreData = () => {
     setTimeout(() => {
@@ -26,34 +37,40 @@ export default function ChatBody({
     }, 500)
   }
 
-  const scrollToTop = () => {
-    bodyScroll.current.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    })
+  const onChatActionClick = () => {
+    toggleBotLoading(true)
+    setTimeout(() => {
+      const chatBody = {
+        id: `${Date.now()}-bot`,
+        text: 'Berikut produk yang tersedia di outlet kami',
+        from: 'bot',
+        type: 'text',
+        date: new Date(),
+        hideAction: true,
+      }
+      appendChat(chatBody)
+    }, 1500)
+    setTimeout(() => {
+      const chatBody = {
+        id: `${Date.now()}-bot`,
+        text: '',
+        from: 'bot',
+        type: 'product',
+        date: new Date(),
+      }
+      appendChat(chatBody)
+      toggleBotLoading(false)
+    }, 3000)
   }
+
   return (
     <main
       className='h-full w-full mx-auto overflow-y-auto fancy-scroll relative flex flex-col-reverse'
       id='infinite-scroll'
       ref={bodyScroll}
     >
-      <button className='fixed z-50 top-4 right-4 block' type='button' onClick={scrollToTop}>
-        press
-      </button>
-      <button
-        className='h-8 w-8 rounded-full bg-primary fixed z-50 top-4 right-4 opacity-70 block sm:hidden'
-        type='button'
-      >
-        <i
-          className='bx bx-x text-2xl cursor-pointer hover:opacity-70 transition-all'
-          title='close'
-          onClick={toggleChatPanel}
-        />
-      </button>
       <InfiniteScroll
-        className='w-full lg:p-8 p-2 px-6 flex flex-col-reverse'
+        className='w-full lg:py-4 py-6 px-6 flex flex-col-reverse'
         dataLength={data.length}
         endMessage='LOOL'
         hasMore
@@ -63,23 +80,45 @@ export default function ChatBody({
         scrollThreshold={0.9}
         scrollableTarget='infinite-scroll'
       >
-        {data.map((val, index) => (
-          <ChatBubbleBot key={index} message={`tikuss${ index}`} />
-        ))}
-        {/* <ChatBubbleMe />
-        <ChatBubbleBot />
-        <ChatBubbleMe />
-        <ChatBubbleBot />
-        <ChatBubbleMe />
-        <ChatBubbleBot />
-        <ChatBubbleMe />
-        <ChatBubbleBot />
-        <ChatBubbleMe /> */}
+        {
+          isBotLoading && (
+            <div className='w-full flex justify-start text-sm my-1'>
+              <div className='bg-white dark:bg-gray-400 text-gray-700 dark:text-gray-900 rounded-full flex items-center'>
+                <PulseLoader className='p-1' color='#0f223d' size={8} />
+              </div>
+            </div>
+          )
+        }
+        {
+          chats.map((chat) => {
+            if (chat.from === 'user') {
+              return <ChatBubbleMe key={chat.id} message={chat.text} />
+            }
+            if (chat.type === 'product') {
+              if (isChatPanelExpanded) {
+                return (
+                  <HorizontalViewProduct
+                    key={chat.id}
+                  />
+                )
+              }
+              return (
+                <CarouselProduct
+                  key={chat.id}
+                />
+              )
+            }
+            return (
+              <ChatBubbleBot
+                hideAction={chat.hideAction}
+                key={chat.id}
+                message={chat.text}
+                onChatActionClick={onChatActionClick}
+              />
+            )
+          })
+        }
       </InfiniteScroll>
     </main>
   )
-}
-
-ChatBody.propTypes = {
-  toggleChatPanel: PropTypes.func,
 }

@@ -1,14 +1,12 @@
 import { useForm } from 'react-hook-form'
 import Input from 'components/form/input'
-import { registration, registrationCheck } from 'api/auth'
+import { registration } from 'api/auth'
 import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 import { PulseLoader } from 'react-spinners'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
-import Hashids from 'hashids'
-import encrypt from 'helpers/encryptor'
-import { useEffect, useCallback } from 'react'
+import { useEffect } from 'react'
 
 /**
  * Parent component:
@@ -17,15 +15,12 @@ import { useEffect, useCallback } from 'react'
  *
  */
 
-const hashids = new Hashids('', 6)
-
 export default function Sign({
   setIsSignProcess,
 }) {
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   const postRegistration = useMutation(registration)
-  const postRegistrationCheck = useMutation(registrationCheck)
 
   useEffect(() => {
     /**
@@ -34,52 +29,29 @@ export default function Sign({
     */
     const userCredential = localStorage.getItem('webchat_user')
     if (userCredential) {
-      console.log('EXECUTED')
       /**
        * Ketika credential user ditemukan, maka langkah selanjutnya melakukan request
        * validasi kepada backend
        */
 
-      const {
-        id, name, email,
-      } = JSON.parse(localStorage.getItem('webchat_user'))
-      postRegistrationCheck.mutate({
-        data: {
-          userId: id, name, email,
-        },
-      })
-
       setIsSignProcess()
-    } else {
-      /**
-       * Ketika user
-       */
-      // localStorage.removeItem('webchat_user')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  console.log('POST REGISTRATION CHECK', postRegistrationCheck)
 
   const onSubmit = (data) => {
     postRegistration.mutate({
       data,
     }, {
-      onSuccess: ({ user: { id, name, email }, cred }) => {
+      onSuccess: (res) => {
         /**
          * Ketika sukses melakukan registrasi/login maka akan menyimpan beberapa data
          * yang dibutuhkan di local storage. Beberapa enkripsi dilakukan untuk memenuhi
          * kebutuhan API dari webchat agar dapat memberikan response yang sesuai.
          */
-        const obj = {
-          id: hashids.encode(id),
-          cred,
-          email: email.toLowerCase(),
-          name: encrypt(name),
-        }
-
+        console.log('token', res)
         setIsSignProcess()
-        localStorage.setItem('webchat_user', JSON.stringify(obj))
+        localStorage.setItem('webchat_user', JSON.stringify(data))
       },
       onError: () => {
         toast.error('Ops Something wrong!', {
@@ -109,7 +81,7 @@ export default function Sign({
               disabled={postRegistration.isLoading}
               errorMessage='Name is required'
               isError={!!errors.name}
-              label='Name'
+              label='Nama'
               name='name'
               placeholder='Nama'
               register={register}
