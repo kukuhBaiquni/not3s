@@ -5,20 +5,15 @@ import { useMutation } from 'react-query'
 import { toast } from 'react-toastify'
 import { PulseLoader } from 'react-spinners'
 import clsx from 'clsx'
-import PropTypes from 'prop-types'
 import { useEffect } from 'react'
+import useUiRelated from 'store/ui-related'
+import useProduct from 'store/products'
+import { getProducts } from 'api/product'
 
-/**
- * Parent component:
- *  -components/common/chat-panel.jsx
- * @param setIsSignProcess func = Untuk mengubah tampilan chat panel dari registrasi ke chat (vice ver·sa)
- *
- */
-
-export default function Sign({
-  setIsSignProcess,
-}) {
+export default function Sign() {
   const { register, handleSubmit, formState: { errors } } = useForm()
+  const { toggleSignProcess } = useUiRelated((state) => state)
+  const { setProducts } = useProduct((state) => state)
 
   const postRegistration = useMutation(registration)
 
@@ -27,14 +22,14 @@ export default function Sign({
      * Ketika inisialisasi page memastikan apakah user pernah login sebelumnya atau tidak
      * dengan cara memeriksa local storage apakah didalam nya terdapat credential user.
     */
-    const userCredential = localStorage.getItem('webchat_user')
-    if (userCredential) {
+    const userCredential = localStorage.getItem('user')
+    const accessToken = localStorage.getItem('access_token')
+    if (userCredential && accessToken) {
       /**
        * Ketika credential user ditemukan, maka langkah selanjutnya melakukan request
        * validasi kepada backend
        */
-
-      setIsSignProcess()
+      toggleSignProcess()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -43,15 +38,17 @@ export default function Sign({
     postRegistration.mutate({
       data,
     }, {
-      onSuccess: (res) => {
+      onSuccess: async (res) => {
         /**
          * Ketika sukses melakukan registrasi/login maka akan menyimpan beberapa data
          * yang dibutuhkan di local storage. Beberapa enkripsi dilakukan untuk memenuhi
          * kebutuhan API dari webchat agar dapat memberikan response yang sesuai.
          */
-        console.log('token', res)
-        setIsSignProcess()
-        localStorage.setItem('webchat_user', JSON.stringify(data))
+        toggleSignProcess()
+        localStorage.setItem('user', JSON.stringify(data))
+        localStorage.setItem('access_token', res.data.access_token)
+        const result = await getProducts()
+        setProducts(result.data)
       },
       onError: () => {
         toast.error('Ops Something wrong!', {
@@ -130,8 +127,4 @@ export default function Sign({
       </div>
     </div>
   )
-}
-
-Sign.propTypes = {
-  setIsSignProcess: PropTypes.func,
 }

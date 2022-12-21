@@ -4,7 +4,6 @@ import env from '../env'
 const {
   API_URL, API_URL_ORI, SAMPLE_INTEGRATION_ID, SAMPLE_APP_ID,
 } = env
-console.log(API_URL)
 const API = async (props) => {
   const {
     path, method = 'GET', params = {}, data, headers,
@@ -24,7 +23,7 @@ const API = async (props) => {
     },
   }
   const response = await axios(config)
-  return response.data.data
+  return response.data
 }
 
 export default API

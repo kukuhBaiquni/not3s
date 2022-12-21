@@ -1,20 +1,9 @@
 import Image from 'next/image'
-import PropTypes from 'prop-types'
 import useUiRelated from 'store/ui-related'
 
-/**
- * Parent component:
- *  -components/common/chat-panel.jsx
- *
- * @param isSignProcess bool = State yang menentukan apakah sedang proses registrasi atau tidak
- *
- */
-
-export default function ChatHead({
-  isSignProcess,
-}) {
+export default function ChatHead() {
   const {
-    toggleChatPanel, isChatPanelExpanded, toggleChatPanelExpanded,
+    toggleChatPanel, isChatPanelExpanded, toggleChatPanelExpanded, isSignProcess,
   } = useUiRelated((state) => state)
 
   return (
@@ -50,8 +39,4 @@ export default function ChatHead({
       </div>
     </header>
   )
-}
-
-ChatHead.propTypes = {
-  isSignProcess: PropTypes.bool,
 }

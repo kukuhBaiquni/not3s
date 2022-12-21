@@ -59,6 +59,18 @@ const useUiRelated = create(
         isBotLoading: data,
       }),
     ),
+    isSignProcess: true,
+    toggleSignProcess: (data) => set(
+      () => ({
+        isSignProcess: data,
+      }),
+    ),
+    isOutletPanelOpen: false,
+    toggleOutletPanel: (data) => set(
+      () => ({
+        isOutletPanelOpen: data,
+      }),
+    ),
   }),
 )
 

@@ -1,10 +1,15 @@
 import Image from 'next/image'
 import { useRef } from 'react'
 import Slider from 'react-slick'
+import currencyFormat from 'utils/number'
+import useProduct from 'store/products'
+import useChat from 'store/chat'
+import useUiRelated from 'store/ui-related'
+import loader from '../blur-placeholder'
 
 const settings = {
   autoplay: true,
-  lazyLoad: true,
+  lazyLoad: false,
   infinite: true,
   pauseOnHover: false,
   arrows: false,
@@ -59,25 +64,77 @@ const settings = {
 
 export default function CarouselProduct() {
   const slider = useRef(null)
+
+  const { products } = useProduct((state) => state)
+  const { appendChat } = useChat((state) => state)
+  const { toggleBotLoading, toggleOutletPanel } = useUiRelated((state) => state)
+
+  const onBuy = (item) => {
+    const chatBody = {
+      id: `${Date.now()}-bot`,
+      text: `Beli ${item.name}`,
+      from: 'user',
+      type: 'text',
+      date: new Date(),
+    }
+    appendChat(chatBody)
+    callBot()
+  }
+
+  const callBot = () => {
+    toggleBotLoading(true)
+    setTimeout(() => {
+      const chatBody = {
+        id: `${Date.now()}-bot`,
+        text: 'Baiklah',
+        from: 'bot',
+        type: 'text',
+        date: new Date(),
+        hideAction: true,
+      }
+      appendChat(chatBody)
+    }, 1500)
+    setTimeout(() => {
+      const chatBody = {
+        id: `${Date.now()}-bot`,
+        text: 'Silahkan memilih outlet, pastikan yang paling dekat dengan posisi kamu ya. 😊',
+        from: 'bot',
+        type: 'outlet-popup',
+        date: new Date(),
+        hideAction: true,
+      }
+      appendChat(chatBody)
+      toggleBotLoading(false)
+      toggleOutletPanel(true)
+    }, 3000)
+  }
+
   return (
     <div className='relative'>
       <Slider ref={slider} {...settings} className='my-2 relative'>
         {
-          Array.from({ length: 8 }).map((_, i) => (
+          products?.map((item, i) => (
             <div className='relative mx-2 w-[165px]' key={i}>
-              <Image
-                alt='product-image'
-                className='tm-base bg-cover rounded-t'
-                height={200}
-                src='https://s3-ap-southeast-1.amazonaws.com/newpawoon/product_images/IMG_453572_1671461442.jpeg'
-                width={165}
-              />
+              <div className='relative w-[165px] h-[150px]'>
+                <Image
+                  alt='product-image'
+                  blurDataURL={loader()}
+                  className='object-cover'
+                  fill
+                  placeholder='blur'
+                  src={item.image}
+                />
+              </div>
               <div className='h-[150px] w-[165px] tm-base p-2 text-sm rounded-b relative'>
-                <h6 className='font-bold leading-5'>Bolu Cake CR7 Messiah</h6>
-                <p className='text-xs text-primary font-titillium'>IDR 97.600,00</p>
+                <h6 className='font-bold leading-5'>{item.name}</h6>
+                <p className='text-xs text-primary font-titillium'>{currencyFormat(item.price)}</p>
                 <i className='bx bxs-star text-yellow-400 text-xs' />
                 <span className='text-xs ml-1 font-titillium'>4.8</span>
-                <button className='w-full bg-primary text-white rounded py-1 mt-[30px] trans-g hover:opacity-70' type='button'>
+                <button
+                  className='w-full bg-primary text-white rounded py-1 mt-[30px] trans-g hover:opacity-70'
+                  type='button'
+                  onClick={() => onBuy(item)}
+                >
                   Beli
                 </button>
               </div>

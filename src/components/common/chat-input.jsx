@@ -8,33 +8,35 @@ import { useDebouncedCallback } from 'use-debounce'
 import useUiRelated from 'store/ui-related'
 import botResponse from 'helpers/bot-response'
 
-export default function ChatInput({
-  isSignProcess,
-}) {
+export default function ChatInput() {
   const { register, handleSubmit, reset } = useForm()
   const { appendChat } = useChat((state) => state)
-  const { toggleBotLoading } = useUiRelated((state) => state)
+  const { toggleBotLoading, isSignProcess } = useUiRelated((state) => state)
 
   const sendMessage = (data, e) => {
     const isEnterPressed = e.keyCode === 13
     if (isEnterPressed) {
-      const chatBody = {
-        id: `${Date.now()}-user`,
-        text: data.text,
-        from: 'user',
-        type: 'text',
-        date: new Date(),
-      }
-      appendChat(chatBody)
-      reset({
-        text: '',
-      })
-      debounceBotResponse()
+      executeSend(data)
     }
   }
 
+  const executeSend = (data) => {
+    const chatBody = {
+      id: `${Date.now()}-user`,
+      text: data.text,
+      from: 'user',
+      type: 'text',
+      date: new Date(),
+    }
+    appendChat(chatBody)
+    reset({
+      text: '',
+    })
+    debounceBotResponse()
+  }
+
   const response = () => {
-    const random = Math.floor(Math.random() * botResponse.length) - 1
+    const random = Math.floor(Math.random() * botResponse.length)
     toggleBotLoading(true)
     setTimeout(() => {
       const chatBody = {
@@ -67,7 +69,7 @@ export default function ChatInput({
               />
               <i className='bx bx-paperclip text-2xl' />
             </div>
-            <i className='bx bxs-send text-2xl' />
+            <i className='bx bxs-send text-2xl cursor-pointer' onClick={handleSubmit(executeSend)} />
           </React.Fragment>
         )}
       </div>

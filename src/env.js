@@ -4,6 +4,7 @@ const env = {
   SAMPLE_INTEGRATION_ID: process.env.NEXT_PUBLIC_SAMPLE_INTEGRATION_ID,
   SAMPLE_APP_ID: process.env.NEXT_PUBLIC_SAMPLE_APP_ID,
   URL_ORI: process.env.NEXT_PUBLIC_SAMPLE_APP_ID,
+  OUTLET_ID: '129939b0-7b7e-11ed-9676-f9e5ce385eb8',
 }
 
 export default env
