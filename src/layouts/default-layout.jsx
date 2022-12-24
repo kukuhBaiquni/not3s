@@ -10,7 +10,7 @@ const Header = dynamic(
 
 export default function DefaultLayout({ children }) {
   return (
-    <div>
+    <div className='tm-base'>
       <Header />
       {/* <div className='root'>
         <div className='flex gap-x-2 justify-between'>
